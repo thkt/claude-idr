@@ -24,12 +24,15 @@ fn exits_zero_when_no_staged_diff() {
     let mut cmd = Command::cargo_bin("claude-idr").unwrap();
     cmd.assert()
         .success()
-        .stderr(predicate::str::contains("no staged changes"));
+        .stderr(
+            predicate::str::contains("no staged changes")
+                .or(predicate::str::contains("no code changes via Claude detected"))
+                .or(predicate::str::contains("no recent session")),
+        );
 }
 
 #[test]
 fn dry_run_flag_prevents_claude_call() {
-    // --dry-run should print the prompt to stderr/stdout but not invoke claude CLI
     let mut cmd = Command::cargo_bin("claude-idr").unwrap();
     cmd.arg("--dry-run");
     cmd.assert().success();

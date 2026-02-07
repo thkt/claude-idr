@@ -109,17 +109,27 @@ Create `~/.config/claude-idr/config.json`:
   "language": "ja",
   "model": "sonnet",
   "session_max_age_min": 30,
-  "open_after_generate": false
+  "output_dir": null
 }
 ```
 
-| Option                | Default    | Description                    |
-| --------------------- | ---------- | ------------------------------ |
-| `enabled`             | `true`     | Enable/disable IDR generation  |
-| `language`            | `"ja"`     | Output language (`ja`, `en`)   |
-| `model`               | `"sonnet"` | Claude model to use            |
-| `session_max_age_min` | `30`       | Max session age in minutes     |
-| `open_after_generate` | `false`    | Open IDR file after generation |
+| Option                | Default                 | Description                                               |
+| --------------------- | ----------------------- | --------------------------------------------------------- |
+| `enabled`             | `true`                  | Enable/disable IDR generation                             |
+| `language`            | `"ja"`                  | Output language (`ja`, `en`)                              |
+| `model`               | `"sonnet"`              | Claude model to use                                       |
+| `session_max_age_min` | `30`                    | Max session age in minutes                                |
+| `output_dir`          | `null`                  | Fixed IDR output directory (null = auto-resolve)          |
+| `max_diff_lines`      | `500`                   | Max changed lines (additions+deletions); skip if exceeded |
+| `workspace_dir`       | `"~/.claude/workspace"` | Workspace directory for SOW-aware resolution              |
+
+### Output directory resolution
+
+When `output_dir` is null (default), the output directory is resolved automatically:
+
+1. Read `workspace_dir/.current-sow` for a SOW file path
+2. If valid (exists, within workspace_dir), use the SOW file's parent directory
+3. Otherwise, fall back to `workspace_dir/planning/YYYY-MM-DD/`
 
 Config search order:
 

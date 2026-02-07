@@ -67,6 +67,7 @@ version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "dirs",
+ "libc",
  "predicates",
  "serde",
  "serde_json",
