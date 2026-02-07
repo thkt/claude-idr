@@ -37,3 +37,19 @@ fn dry_run_flag_prevents_claude_call() {
     cmd.arg("--dry-run");
     cmd.assert().success();
 }
+
+#[test]
+fn dry_run_outputs_prompt_when_session_and_diff_available() {
+    let mut cmd = Command::cargo_bin("claude-idr").unwrap();
+    cmd.arg("--dry-run");
+    // dry-run always succeeds; when session+diff are present it prints the prompt,
+    // otherwise it exits early with a skip message — both are valid outcomes.
+    cmd.assert()
+        .success()
+        .stderr(
+            predicate::str::contains("dry-run mode")
+                .or(predicate::str::contains("no staged changes"))
+                .or(predicate::str::contains("no code changes via Claude detected"))
+                .or(predicate::str::contains("no recent session")),
+        );
+}

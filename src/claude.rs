@@ -16,8 +16,12 @@ pub fn run(prompt: &str, config: &Config) -> Option<String> {
         && let Err(e) = stdin.write_all(prompt.as_bytes())
     {
         eprintln!("claude-idr: warning: failed to write prompt: {e}");
-        let _ = child.kill();
-        let _ = child.wait();
+        if let Err(e) = child.kill() {
+            eprintln!("claude-idr: warning: failed to kill claude process: {e}");
+        }
+        if let Err(e) = child.wait() {
+            eprintln!("claude-idr: warning: failed to wait for claude process: {e}");
+        }
         return None;
     }
 
@@ -36,7 +40,7 @@ pub fn run(prompt: &str, config: &Config) -> Option<String> {
     }
 }
 
-pub fn build_command(config: &Config) -> Vec<String> {
+fn build_command(config: &Config) -> Vec<String> {
     vec![
         "-p".to_string(),
         "--model".to_string(),

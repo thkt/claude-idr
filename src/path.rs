@@ -120,7 +120,9 @@ fn epoch_now() -> i64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default()
-        .as_secs() as i64
+        .as_secs()
+        .try_into()
+        .unwrap_or(i64::MAX)
 }
 
 fn local_datetime(epoch_secs: i64) -> (i32, u32, u32, u32, u32) {

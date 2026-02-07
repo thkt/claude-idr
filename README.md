@@ -40,17 +40,28 @@ cp target/release/claude-idr ~/.local/bin/
 
 ## Setup
 
-Install as a git pre-commit hook in your project:
+Add to your project's `.git/hooks/pre-commit`:
 
 ```bash
-cd your-project
-claude-idr-install  # or run: ./install.sh
+#!/bin/bash
+claude-idr
 ```
 
-Or add manually to `.git/hooks/pre-commit`:
+Make it executable:
 
 ```bash
-claude-idr || true
+chmod +x .git/hooks/pre-commit
+```
+
+If you already have a pre-commit hook, append `claude-idr` to it.
+
+To apply globally across all repositories:
+
+```bash
+mkdir -p ~/.config/git/hooks
+echo '#!/bin/bash\nclaude-idr' > ~/.config/git/hooks/pre-commit
+chmod +x ~/.config/git/hooks/pre-commit
+git config --global core.hooksPath ~/.config/git/hooks
 ```
 
 ## Usage
